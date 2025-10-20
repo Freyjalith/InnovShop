@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<!-- Admin Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('admin') }}">
+            <i class="fas fa-cogs me-2"></i>InnovShop Admin
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin') }}">
+                        <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-shopping-cart me-1"></i>Commandes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('admin_orders') }}">
+                            <i class="fas fa-list me-1"></i>Toutes les commandes
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ path('admin_orders', {status: 'pending_payment'}) }}">
+                            <i class="fas fa-exclamation-triangle me-1"></i>Paiements en attente
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ path('admin_orders', {status: 'processing'}) }}">
+                            <i class="fas fa-cog me-1"></i>En traitement
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ path('admin_orders', {status: 'shipped'}) }}">
+                            <i class="fas fa-truck me-1"></i>Expédiées
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-box me-1"></i>Produits
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('index') }}">
+                            <i class="fas fa-list me-1"></i>Tous les produits
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('new') }}">
+                            <i class="fas fa-plus me-1"></i>Nouveau produit
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('index') }}">
+                            <i class="fas fa-images me-1"></i>Images
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('admin_categories') }}">
+                            <i class="fas fa-tags me-1"></i>Catégories
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ path('admin_products_categories') }}">
+                            <i class="fas fa-link me-1"></i>Assigner catégories
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController').setAction('index') }}">
+                        <i class="fas fa-users me-1"></i>Utilisateurs
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('home') }}" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i>Voir le site
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">
+                        <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% block admin_content %}{% endblock %}
+
+<!-- Bouton flottant de retour au dashboard -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+    <a href="{{ path('admin') }}" class="btn btn-primary btn-lg rounded-circle shadow" 
+       title="Retour au Dashboard" data-bs-toggle="tooltip">
+        <i class="fas fa-home"></i>
+    </a>
+</div>
+
+<style>
+.breadcrumb {
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    padding: 0.75rem 1rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 0.25rem;
+}
+
+.btn-lg.rounded-circle {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+</style>
+
+<script>
+// Initialiser les tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Raccourcis clavier
+    document.addEventListener('keydown', function(e) {
+        // Alt + D = Dashboard
+        if (e.altKey && e.key === 'd') {
+            e.preventDefault();
+            window.location.href = '{{ path('admin') }}';
+        }
+        // Alt + C = Commandes
+        if (e.altKey && e.key === 'c') {
+            e.preventDefault();
+            window.location.href = '{{ path('admin_orders') }}';
+        }
+        // Alt + P = Produits
+        if (e.altKey && e.key === 'p') {
+            e.preventDefault();
+            window.location.href = '{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('index') }}';
+        }
+        // Alt + S = Voir le site
+        if (e.altKey && e.key === 's') {
+            e.preventDefault();
+            window.open('{{ path('home') }}', '_blank');
+        }
+    });
+});
+</script>
+
+<!-- Aide pour les raccourcis -->
+<div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1040;">
+    <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#shortcutsHelp" title="Raccourcis clavier">
+        <i class="fas fa-keyboard"></i>
+    </button>
+    <div class="collapse mt-2" id="shortcutsHelp">
+        <div class="card card-body bg-dark text-white" style="font-size: 0.8rem;">
+            <strong>Raccourcis :</strong><br>
+            <kbd>Alt + D</kbd> Dashboard<br>
+            <kbd>Alt + C</kbd> Commandes<br>
+            <kbd>Alt + P</kbd> Produits<br>
+            <kbd>Alt + S</kbd> Voir le site
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - InnovShop{% endblock %}
+
+{% block body %}
+<div class="hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 0; position: relative; overflow: hidden;">
+    <div class="hero-particles"></div>
+    <div class="container text-center" style="position: relative;">
+        <h1 class="display-4 fw-bold text-white hero-title">Bienvenue chez InnovShop</h1>
+        <p class="lead text-white hero-subtitle">Découvrez les produits technologiques les plus innovants</p>
+        <a href="{{ path('catalogue') }}" class="btn btn-light btn-lg mt-3 hero-btn">
+            Découvrir nos produits
+        </a>
+    </div>
+</div>
+
+<div class="products-section" style="background-color: white; position: relative;">
+<div class="container my-5">
+    <section class="mb-5">
+        <div class="text-center mb-5">
+            <h2 class="h3 fw-bold" style="color: #333;">Produits à la Une</h2>
+            <p class="text-muted">Nos coups de cœur sélectionnés pour vous</p>
+        </div>
+        <div class="row g-4">
+            {% for product in featuredProducts %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="product-card">
+                        {% set primaryImage = product.getPrimaryImage() %}
+                        <img src="{% if primaryImage %}{{ asset('uploads/product/' ~ primaryImage.filename) }}{% else %}https://via.placeholder.com/400x200?text={{ product.name|url_encode }}{% endif %}" class="product-image w-100" alt="{{ product.name }}">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge badge-category">{{ product.name|split(' ')|first }}</span>
+                                <div>
+                                    {% if product.isNew() %}
+                                        <span class="badge bg-success me-1">Nouveau</span>
+                                    {% endif %}
+                                    {% if product.hasPromotion() %}
+                                        <span class="badge bg-danger">Promo</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #333;">{{ product.name }}</h5>
+                            <p class="text-muted small mb-3">{{ product.description|length > 60 ? product.description|slice(0,60) ~ '...' : product.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.hasPromotion() %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-decoration-line-through text-muted">{{ product.originalPrice }}€</span>
+                                            <span class="price h5 mb-0 text-danger">{{ product.getCurrentPrice() }}€</span>
+                                            <span class="badge bg-danger">-{{ product.discountPercentage }}%</span>
+                                        </div>
+                                    {% else %}
+                                        <span class="price h5 mb-0" style="color: #007bff;">{{ product.price }}€</span>
+                                    {% endif %}
+                                    <div class="stars small text-warning">★★★★★</div>
+                                </div>
+                                <div>
+                                    <button onclick="viewProduct({{ product.id }})" class="btn btn-outline-dark btn-sm me-1">Voir</button>
+                                    <button onclick="addToCart({{ product.id }}, this)" class="btn btn-dark btn-sm">
+                                        <i class="bi bi-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Aucun produit à la une pour le moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="text-center mb-5">
+            <h2 class="h3 fw-bold" style="color: #333;">Derniers Produits</h2>
+            <p class="text-muted">Les 3 derniers produits ajoutés à notre catalogue</p>
+        </div>
+        <div class="row g-4">
+            {% for product in lastProducts %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="product-card">
+                        {% set primaryImage = product.getPrimaryImage() %}
+                        <img src="{% if primaryImage %}{{ asset('uploads/product/' ~ primaryImage.filename) }}{% else %}https://via.placeholder.com/400x200?text={{ product.name|url_encode }}{% endif %}" class="product-image w-100" alt="{{ product.name }}">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge badge-category">{{ product.name|split(' ')|first }}</span>
+                                <div>
+                                    {% if product.isNew() %}
+                                        <span class="badge bg-success me-1">Nouveau</span>
+                                    {% endif %}
+                                    {% if product.hasPromotion() %}
+                                        <span class="badge bg-danger">Promo</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #333;">{{ product.name }}</h5>
+                            <p class="text-muted small mb-3">{{ product.description|length > 60 ? product.description|slice(0,60) ~ '...' : product.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.hasPromotion() %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-decoration-line-through text-muted">{{ product.originalPrice }}€</span>
+                                            <span class="price h5 mb-0 text-danger">{{ product.getCurrentPrice() }}€</span>
+                                            <span class="badge bg-danger">-{{ product.discountPercentage }}%</span>
+                                        </div>
+                                    {% else %}
+                                        <span class="price h5 mb-0" style="color: #007bff;">{{ product.price }}€</span>
+                                    {% endif %}
+                                    <div class="stars small text-warning">★★★★★</div>
+                                </div>
+                                <div>
+                                    <button onclick="viewProduct({{ product.id }})" class="btn btn-outline-dark btn-sm me-1">Voir</button>
+                                    <button onclick="addToCart({{ product.id }}, this)" class="btn btn-dark btn-sm">
+                                        <i class="bi bi-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Aucun nouveau produit pour le moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="my-5">
+        <div class="card cta-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; position: relative; overflow: hidden;">
+            <div class="cta-particles"></div>
+            <div class="card-body text-center text-white py-5" style="position: relative; z-index: 2;">
+                <h3 class="fw-bold mb-3 cta-title">Prêt à découvrir l'innovation ?</h3>
+                <p class="mb-4 cta-subtitle">Explorez notre catalogue complet de produits technologiques</p>
+                <a href="{{ path('catalogue') }}" class="btn btn-light btn-lg cta-btn">
+                    Voir tout le catalogue
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+
+
+{% endblock %}

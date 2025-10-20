@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-center">
+                    <div class="step-indicator active">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Informations</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-indicator">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Paiement</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-indicator">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Confirmation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h1>Finaliser votre commande</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post" action="{{ path('app_checkout_process') }}">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Informations personnelles</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">Prénom *</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" 
+                                           value="{{ user ? user.firstName : '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Nom *</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" 
+                                           value="{{ user ? user.lastName : '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="{{ user ? user.email : '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Téléphone *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Adresse de livraison</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Adresse *</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="postalCode" class="form-label">Code postal *</label>
+                                    <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">Ville *</label>
+                                    <input type="text" class="form-control" id="city" name="city" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Pays</label>
+                                    <input type="text" class="form-control" id="country" name="country" value="France">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-arrow-right me-2"></i>Continuer vers le paiement
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Récapitulatif</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart.items %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ item.product.name }} x{{ item.quantity }}</span>
+                            <span>{{ item.totalPrice }}€</span>
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total: {{ cart.totalPrice }}€</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

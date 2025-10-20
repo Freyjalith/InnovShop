@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mise à jour de commande</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .status { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; text-align: center; }
+        .status-badge { padding: 10px 20px; border-radius: 20px; color: white; font-weight: bold; }
+        .pending { background: #6c757d; }
+        .pending_payment { background: #fd7e14; }
+        .paid { background: #17a2b8; }
+        .processing { background: #ffc107; color: #333; }
+        .shipped { background: #007bff; }
+        .delivered { background: #28a745; }
+        .cancelled { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 InnovShop</h1>
+            <h2>Mise à jour de commande</h2>
+        </div>
+        
+        <div class="content">
+            <p>Bonjour {{ order.customerFirstName }} {{ order.customerLastName }},</p>
+            <p>Le statut de votre commande <strong>{{ order.orderNumber }}</strong> a été mis à jour :</p>
+            
+            <div class="status">
+                <span class="status-badge {{ order.status }}">{{ statusMessage }}</span>
+            </div>
+            
+            {% if order.status == 'pending_payment' %}
+                <p>💳 Votre commande est en attente de paiement. Veuillez finaliser votre paiement pour que nous puissions traiter votre commande.</p>
+            {% elseif order.status == 'paid' %}
+                <p>✅ Votre paiement a été confirmé ! Nous allons bientôt préparer votre commande.</p>
+            {% elseif order.status == 'processing' %}
+                <p>⚙️ Votre commande est en cours de préparation dans nos entrepôts.</p>
+            {% elseif order.status == 'shipped' %}
+                <p>🚚 Votre commande a été expédiée ! Vous devriez la recevoir sous 2-3 jours ouvrés.</p>
+            {% elseif order.status == 'delivered' %}
+                <p>🎉 Votre commande a été livrée ! N'hésitez pas à laisser un avis sur vos produits.</p>
+            {% elseif order.status == 'cancelled' %}
+                <p>❌ Votre commande a été annulée. Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+            {% endif %}
+            
+            <p>Vous pouvez suivre votre commande dans votre espace client.</p>
+            <p>Merci de votre confiance !</p>
+        </div>
+    </div>
+</body>
+</html>

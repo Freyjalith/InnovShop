@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+<div class="cart-page">
+<div class="container mt-4">
+    <h1>Mon Panier</h1>
+
+    {% if cart.items|length > 0 %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% for item in cart.items %}
+                            <div class="row align-items-center mb-3 cart-item" data-item-id="{{ item.id }}">
+                                <div class="col-md-2">
+                                    {% if item.product.primaryImage %}
+                                        <img src="{{ asset('uploads/product/' ~ item.product.primaryImage.filename) }}" 
+                                             alt="{{ item.product.name }}" class="img-fluid">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>{{ item.product.name }}</h5>
+                                    <p class="text-muted">{{ item.unitPrice }}€</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                                data-action="decrease" data-item-id="{{ item.id }}">-</button>
+                                        <input type="number" class="form-control text-center quantity-input" 
+                                               value="{{ item.quantity }}" min="1" data-item-id="{{ item.id }}">
+                                        <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                                data-action="increase" data-item-id="{{ item.id }}">+</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong class="item-total">{{ item.totalPrice }}€</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-danger btn-sm remove-item" data-item-id="{{ item.id }}">×</button>
+                                </div>
+                            </div>
+                            {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Résumé</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total:</span>
+                            <span id="cart-total">{{ cart.totalPrice }}€</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_checkout') }}" class="btn btn-primary">Commander</a>
+                            <button class="btn btn-outline-danger" id="clear-cart">Vider</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h3>Panier vide</h3>
+            <a href="{{ path('catalogue') }}" class="btn btn-primary">Voir le catalogue</a>
+        </div>
+    {% endif %}
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const action = this.dataset.action;
+            const input = document.querySelector(`input[data-item-id="${itemId}"]`);
+            let quantity = parseInt(input.value);
+            
+            if (action === 'increase') quantity++;
+            else if (action === 'decrease' && quantity > 1) quantity--;
+            
+            input.value = quantity;
+            updateQuantity(itemId, quantity);
+        });
+    });
+
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+            removeItem(this.dataset.itemId);
+        });
+    });
+
+    document.getElementById('clear-cart')?.addEventListener('click', function() {
+        if (confirm('Vider le panier ?')) clearCart();
+    });
+
+    function updateQuantity(itemId, quantity) {
+        fetch(`/cart/update/${itemId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `quantity=${quantity}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cart-total').textContent = data.cartTotal + '€';
+            }
+        });
+    }
+
+    function removeItem(itemId) {
+        fetch(`/cart/remove/${itemId}`, {method: 'POST'})
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelector(`[data-item-id="${itemId}"]`).closest('.cart-item').remove();
+                if (data.cartCount === 0) location.reload();
+                else document.getElementById('cart-total').textContent = data.cartTotal + '€';
+            }
+        });
+    }
+
+    function clearCart() {
+        fetch('/cart/clear', {method: 'POST'})
+        .then(() => location.reload());
+    }
+});
+</script>
+{% endblock %}

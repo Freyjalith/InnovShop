@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FAQ - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Questions Fréquentes</h1>
+        <p class="lead text-muted">Trouvez rapidement les réponses à vos questions</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Comment passer une commande ?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Ajoutez vos produits au panier, puis cliquez sur "Finaliser la commande". Remplissez vos informations de livraison et choisissez votre mode de paiement.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Quels sont les délais de livraison ?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Les délais de livraison sont de 2-3 jours ouvrés en France métropolitaine et 5-7 jours pour les DOM-TOM et l'international.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Puis-je retourner un produit ?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Oui, vous disposez de 14 jours pour retourner un produit. Consultez notre page "Retours" pour plus d'informations.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Comment suivre ma commande ?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Connectez-vous à votre compte et rendez-vous dans "Mes commandes" pour suivre l'état de vos commandes en temps réel.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

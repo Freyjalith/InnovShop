@@ -1,0 +1,39 @@
+{% set images = field.value %}
+
+<div class="product-images-manager">
+    <h5>Images du produit</h5>
+    
+    {% if images|length > 0 %}
+        <div class="row mb-3">
+            {% for image in images %}
+                <div class="col-md-3 mb-2">
+                    <div class="card">
+                        <img src="{{ asset('uploads/product/' ~ image.filename) }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                        <div class="card-body p-2">
+                            <small class="text-muted">{{ image.filename }}</small>
+                            {% if image.isPrimary %}
+                                <span class="badge bg-primary">Principale</span>
+                            {% endif %}
+                            <div class="mt-1">
+                                <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('edit').setEntityId(image.id) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                                <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('delete').setEntityId(image.id) }}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="alert alert-info">
+        <strong>Pour ajouter des images :</strong><br>
+        1. Allez dans le menu "Images"<br>
+        2. Cliquez sur "Ajouter une image"<br>
+        3. Sélectionnez ce produit et uploadez votre image<br>
+        4. Cochez "Image principale" pour l'image principale
+    </div>
+    
+    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('new').set('product_id', entity.id) }}" class="btn btn-success">
+        <i class="fa fa-plus"></i> Ajouter une image
+    </a>
+</div>

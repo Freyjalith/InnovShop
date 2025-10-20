@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue - InnovShop{% endblock %}
+
+{% block body %}
+<div class="catalogue-page">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold mb-3" style="color: #2c3e50;">Catalogue Produits</h1>
+            <p class="text-muted">Découvrez notre sélection de {{ products|length }} produits technologiques innovants</p>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <form method="get" class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-search me-2 text-primary"></i>Rechercher
+                                </label>
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control form-control-lg border-0 bg-light" 
+                                           placeholder="Nom du produit, description..." value="{{ search }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-tag me-2 text-primary"></i>Catégorie
+                                </label>
+                                <select name="category" class="form-select form-select-lg border-0 bg-light" onchange="this.form.submit()">
+                                    <option value="">Toutes</option>
+                                    <option value="Audio" {% if category == 'Audio' %}selected{% endif %}>Audio</option>
+                                    <option value="Wearables" {% if category == 'Wearables' %}selected{% endif %}>Wearables</option>
+                                    <option value="VR" {% if category == 'VR' %}selected{% endif %}>VR</option>
+                                    <option value="Drones" {% if category == 'Drones' %}selected{% endif %}>Drones</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-sort-down me-2 text-primary"></i>Trier par
+                                </label>
+                                <select name="sort" class="form-select form-select-lg border-0 bg-light" onchange="this.form.submit()">
+                                    <option value="name_asc" {% if sort == 'name_asc' %}selected{% endif %}>Nom (A-Z)</option>
+                                    <option value="name_desc" {% if sort == 'name_desc' %}selected{% endif %}>Nom (Z-A)</option>
+                                    <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+                                    <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-funnel-fill me-2"></i>Filtrer
+                                    </button>
+                                    {% if search or category %}
+                                        <a href="{{ path('catalogue') }}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h5 class="mb-1 text-dark">{{ products|length }} produit{{ products|length > 1 ? 's' : '' }} trouvé{{ products|length > 1 ? 's' : '' }}</h5>
+                {% if search %}
+                    <small class="text-primary">
+                        <i class="bi bi-funnel-fill me-1"></i>Filtres actifs
+                        {% if search %}: "{{ search }}"{% endif %}
+                        {% if category %} - Catégorie: {{ category }}{% endif %}
+                    </small>
+                {% endif %}
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" onclick="toggleView('grid')" id="gridBtn">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="toggleView('list')" id="listBtn">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row g-4" id="productsContainer">
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 product-item">
+                    <div class="card h-100 border-0 shadow-sm product-card" style="border-radius: 16px; overflow: hidden; transition: all 0.3s ease;">
+                        <div class="position-relative overflow-hidden">
+                            {% set primaryImage = product.getPrimaryImage() %}
+                            <img src="{% if primaryImage %}{{ asset('uploads/product/' ~ primaryImage.filename) }}{% else %}https://via.placeholder.com/300x200?text={{ product.name|url_encode }}{% endif %}" 
+                                 class="card-img-top" alt="{{ product.name }}" 
+                                 style="height: 220px; object-fit: cover; transition: transform 0.3s ease;">
+                            <div class="position-absolute top-0 start-0 m-3">
+                                {% if product.isNew() %}
+                                    <span class="badge bg-success mb-1 d-block">Nouveau</span>
+                                {% endif %}
+                                {% if product.hasPromotion() %}
+                                    <span class="badge bg-danger">-{{ product.discountPercentage }}%</span>
+                                {% endif %}
+                            </div>
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <div class="bg-white rounded-circle p-2 shadow-sm">
+                                    <i class="bi bi-heart text-muted"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark small">{{ product.name|split(' ')|first }}</span>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2 text-dark">{{ product.name }}</h5>
+                            <p class="card-text text-muted small mb-3" style="line-height: 1.5;">
+                                {{ product.description|length > 80 ? product.description|slice(0,80) ~ '...' : product.description }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    {% if product.hasPromotion() %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-decoration-line-through text-muted small">{{ product.originalPrice }}€</span>
+                                            <span class="h5 mb-0 fw-bold text-danger">{{ product.getCurrentPrice() }}€</span>
+                                        </div>
+                                    {% else %}
+                                        <span class="h5 mb-0 fw-bold text-primary">{{ product.price }}€</span>
+                                    {% endif %}
+                                </div>
+                                <div class="text-warning">
+                                    <small>★★★★★</small>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <a href="{{ path('product_show', {id: product.id}) }}" class="btn btn-primary">
+                                    <i class="bi bi-eye me-2"></i>Voir détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-info-circle display-1 text-muted mb-3"></i>
+                        <h4 style="color: #2c3e50;">Aucun produit disponible</h4>
+                        <p class="text-muted">Notre catalogue sera bientôt rempli de produits innovants !</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function toggleView(view) {
+    const container = document.getElementById('productsContainer');
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+    const items = document.querySelectorAll('.product-item');
+    
+    if (view === 'grid') {
+        container.className = 'row g-4';
+        items.forEach(item => {
+            item.className = 'col-lg-3 col-md-4 col-sm-6 product-item';
+        });
+        gridBtn.classList.add('btn-primary');
+        gridBtn.classList.remove('btn-outline-secondary');
+        listBtn.classList.add('btn-outline-secondary');
+        listBtn.classList.remove('btn-primary');
+    } else {
+        container.className = 'row g-3';
+        items.forEach(item => {
+            item.className = 'col-12 product-item';
+        });
+        listBtn.classList.add('btn-primary');
+        listBtn.classList.remove('btn-outline-secondary');
+        gridBtn.classList.add('btn-outline-secondary');
+        gridBtn.classList.remove('btn-primary');
+    }
+}
+
+document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+        const img = this.querySelector('.card-img-top');
+        if (img) img.style.transform = 'scale(1.05)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '';
+        const img = this.querySelector('.card-img-top');
+        if (img) img.style.transform = 'scale(1)';
+    });
+});
+
+document.getElementById('gridBtn').classList.add('btn-primary');
+document.getElementById('gridBtn').classList.remove('btn-outline-secondary');
+</script>
+{% endblock %}

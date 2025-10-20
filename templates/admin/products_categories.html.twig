@@ -1,0 +1,84 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Assigner Produits aux Catégories{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Assigner les Produits aux Catégories</h1>
+        <div>
+            {% if categories|length == 0 %}
+                <a href="{{ path('admin_categories_init') }}" class="btn btn-success me-2">
+                    <i class="bi bi-plus-circle"></i> Créer les catégories
+                </a>
+            {% endif %}
+            <a href="{{ path('admin_categories') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Retour aux catégories
+            </a>
+        </div>
+    </div>
+
+    {% if categories|length == 0 %}
+        <div class="alert alert-warning">
+            <h5><i class="bi bi-exclamation-triangle"></i> Aucune catégorie disponible</h5>
+            <p>Vous devez d'abord créer des catégories avant de pouvoir les assigner aux produits.</p>
+            <a href="{{ path('admin_categories_init') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Créer les catégories maintenant
+            </a>
+        </div>
+    {% else %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Catégorie actuelle</th>
+                            <th>Nouvelle catégorie</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>
+                                    <strong>{{ product.name }}</strong><br>
+                                    <small class="text-muted">{{ product.price }}€</small>
+                                </td>
+                                <td>
+                                    {% if product.category %}
+                                        <span class="badge bg-primary">{{ product.category.name }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Aucune</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="post" action="{{ path('admin_product_assign_category', {id: product.id}) }}" class="d-inline">
+                                        <select name="category_id" class="form-select form-select-sm">
+                                            <option value="">Aucune catégorie</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}" 
+                                                    {% if product.category and product.category.id == category.id %}selected{% endif %}>
+                                                    {{ category.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                </td>
+                                <td>
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check"></i> Assigner
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

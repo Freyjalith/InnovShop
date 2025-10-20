@@ -1,0 +1,32 @@
+<div class="product-images-manager">
+    <h5>Images du produit</h5>
+    
+    {% if entity.images|length > 0 %}
+        <div class="row mb-3">
+            {% for image in entity.images %}
+                <div class="col-md-3 mb-2">
+                    <div class="card">
+                        <img src="{{ asset('uploads/product/' ~ image.filename) }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                        <div class="card-body p-2">
+                            <small class="text-muted">{{ image.filename }}</small>
+                            {% if image.isPrimary %}
+                                <span class="badge bg-primary">Principale</span>
+                            {% else %}
+                                <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('edit').setEntityId(image.id) }}" class="btn btn-sm btn-outline-primary">Définir comme principale</a>
+                            {% endif %}
+                            <div class="mt-1">
+                                <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('delete').setEntityId(image.id) }}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="mb-3">
+        <label class="form-label">Ajouter de nouvelles images</label>
+        {{ form_widget(field.vars.form) }}
+        <div class="form-text">Sélectionnez plusieurs images à la fois (Ctrl+clic)</div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+body {
+    background-color: skyblue;
+}
+
+/* Indicateurs d'étapes pour le checkout */
+.step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+    border: 2px solid #e9ecef;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+.step-indicator.active .step-number {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.step-indicator.active .step-label {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.step-indicator.completed .step-number {
+    background-color: #198754;
+    color: white;
+    border-color: #198754;
+}
+
+.step-indicator.completed .step-label {
+    color: #198754;
+    font-weight: 600;
+}
+
+.step-connector {
+    width: 80px;
+    height: 2px;
+    background-color: #e9ecef;
+    margin: 0 20px;
+    margin-top: 20px;
+}
+
+.step-connector.completed {
+    background-color: #198754;
+}
+
+/* Styles pour les formulaires de paiement */
+.payment-form {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: #f8f9fa;
+}
+
+.payment-form input {
+    background-color: white;
+}
+
+/* Styles pour les méthodes de paiement */
+.form-check-label {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+}
+
+.form-check-input:checked + .form-check-label {
+    background-color: #e7f3ff;
+    border: 1px solid #0d6efd;
+}
+
+.form-check-label:hover {
+    background-color: #f8f9fa;
+}
+
+.payment-form .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.payment-form .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Responsive pour les indicateurs d'étapes */
+@media (max-width: 768px) {
+    .step-connector {
+        width: 40px;
+        margin: 0 10px;
+        margin-top: 20px;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+    }
+    
+    .step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.875rem;
+    }
+    
+    .payment-form .row .col-md-4 {
+        margin-bottom: 1rem;
+    }
+}

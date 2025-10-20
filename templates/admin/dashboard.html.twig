@@ -1,0 +1,220 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content_title %}
+    <div class="d-flex align-items-center">
+        <i class="fa fa-tachometer-alt me-2"></i>
+        Tableau de bord InnovShop
+    </div>
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info border-0 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-info-circle fa-2x me-3"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1">Bienvenue dans l'administration InnovShop</h5>
+                        <p class="mb-0">Gérez vos produits, commandes et utilisateurs en toute simplicité.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fa fa-shopping-cart fa-2x text-primary mb-2"></i>
+                    <h3 class="text-primary">{{ stats.totalOrders }}</h3>
+                    <p class="text-muted mb-0">Commandes totales</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fa fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                    <h3 class="text-warning">{{ stats.pendingOrders }}</h3>
+                    <p class="text-muted mb-0">En attente de paiement</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fa fa-box fa-2x text-success mb-2"></i>
+                    <h3 class="text-success">{{ stats.totalProducts }}</h3>
+                    <p class="text-muted mb-0">Produits</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fa fa-users fa-2x text-info mb-2"></i>
+                    <h3 class="text-info">{{ stats.totalUsers }}</h3>
+                    <p class="text-muted mb-0">Utilisateurs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-box fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Gestion des Produits</h5>
+                    <p class="card-text text-muted">Ajoutez, modifiez et gérez vos produits avec leur stock.</p>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('index') }}" 
+                       class="btn btn-primary">
+                        <i class="fa fa-cog me-2"></i>Gérer les produits
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-images fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Images Produits</h5>
+                    <p class="card-text text-muted">Gérez les images de vos produits et définissez les images principales.</p>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('index') }}" 
+                       class="btn btn-success">
+                        <i class="fa fa-image me-2"></i>Gérer les images
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-shopping-cart fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Gestion des Commandes</h5>
+                    <p class="card-text text-muted">Gérez les commandes, validez les paiements et suivez les livraisons.</p>
+                    <a href="{{ path('admin_orders') }}" class="btn btn-warning">
+                        <i class="fa fa-shopping-cart me-2"></i>Gérer les commandes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-users fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Gestion des Utilisateurs</h5>
+                    <p class="card-text text-muted">Gérez les comptes clients et leurs informations.</p>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController').setAction('index') }}" class="btn btn-info">
+                        <i class="fa fa-users me-2"></i>Gérer les utilisateurs
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-external-link-alt fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title">Voir le Site</h5>
+                    <p class="card-text text-muted">Naviguez sur votre site pour voir les modifications en temps réel.</p>
+                    <a href="{{ path('home') }}" class="btn btn-secondary" target="_blank">
+                        <i class="fa fa-eye me-2"></i>Ouvrir le site
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="mb-0"><i class="fa fa-chart-bar me-2"></i>Actions rapides</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('new') }}" 
+                               class="btn btn-outline-primary w-100 py-3">
+                                <i class="fa fa-plus fa-2x d-block mb-2"></i>
+                                <strong>Nouveau Produit</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductCrudController').setAction('index') }}" 
+                               class="btn btn-outline-secondary w-100 py-3">
+                                <i class="fa fa-list fa-2x d-block mb-2"></i>
+                                <strong>Liste Produits</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ path('catalogue') }}" 
+                               class="btn btn-outline-info w-100 py-3" target="_blank">
+                                <i class="fa fa-store fa-2x d-block mb-2"></i>
+                                <strong>Catalogue Public</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ path('admin_orders') }}" 
+                               class="btn btn-outline-warning w-100 py-3">
+                                <i class="fa fa-shopping-cart fa-2x d-block mb-2"></i>
+                                <strong>Commandes</strong>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row text-center mt-3">
+                        <div class="col-md-6">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\ProductImageCrudController').setAction('index') }}" 
+                               class="btn btn-outline-success w-100 py-3">
+                                <i class="fa fa-camera fa-2x d-block mb-2"></i>
+                                <strong>Toutes les Images</strong>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ path('admin_orders', {status: 'pending_payment'}) }}" 
+                               class="btn btn-outline-danger w-100 py-3">
+                                <i class="fa fa-exclamation-triangle fa-2x d-block mb-2"></i>
+                                <strong>Paiements en attente</strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+</style>
+{% endblock %}

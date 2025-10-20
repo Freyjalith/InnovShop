@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Retours - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Retours</h1>
+        <p class="lead text-muted">Politique de retour et échange</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-arrow-return-left me-2"></i>Droit de rétractation</h5>
+                    <p>Vous disposez de <strong>14 jours</strong> à compter de la réception de votre commande pour exercer votre droit de rétractation, sans avoir à justifier de motifs ni à payer de pénalités.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-check-circle me-2"></i>Conditions de retour</h5>
+                    <ul>
+                        <li>Les produits doivent être dans leur état d'origine</li>
+                        <li>Emballage d'origine conservé</li>
+                        <li>Tous les accessoires inclus</li>
+                        <li>Facture d'achat jointe</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-gear me-2"></i>Procédure de retour</h5>
+                    <ol>
+                        <li>Contactez notre service client</li>
+                        <li>Recevez votre étiquette de retour</li>
+                        <li>Emballez soigneusement votre produit</li>
+                        <li>Déposez le colis en point relais</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-cash me-2"></i>Remboursement</h5>
+                    <p>Le remboursement sera effectué dans un délai de <strong>14 jours</strong> après réception et vérification du produit retourné, sur le même moyen de paiement utilisé lors de l'achat.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

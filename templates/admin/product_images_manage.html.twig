@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des images - {{ product.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-images me-2"></i>
+        Gestion des images - {{ product.name }}
+    </h1>
+<div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CProductCrudController">Produits</a>
+            </li>
+            <li class="breadcrumb-item active">Images - {{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Upload Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Ajouter des images</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="upload">
+                        
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Sélectionner les images</label>
+                            <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*" required>
+                            <div class="form-text">Formats acceptés: JPG, PNG, GIF. Plusieurs fichiers possibles.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-upload me-2"></i>Télécharger
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations produit</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nom:</strong> {{ product.name }}</p>
+                    <p><strong>Prix:</strong> {{ product.price }}€</p>
+                    <p><strong>Stock:</strong> {{ product.stock }} unités</p>
+                    <p><strong>Images:</strong> {{ product.images|length }} image(s)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Images Gallery -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-images me-2"></i>Images du produit</h5>
+                    <span class="badge bg-light text-dark">{{ product.images|length }} image(s)</span>
+                </div>
+                <div class="card-body">
+                    {% if product.images|length > 0 %}
+                        <div class="row g-3">
+                            {% for image in product.images %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100 {% if image.primary %}border-success{% endif %}">
+                                        <div class="position-relative">
+                                            <img src="{{ asset('uploads/product/' ~ image.filename) }}" 
+                                                 class="card-img-top" 
+                                                 style="height: 200px; object-fit: cover;"
+                                                 alt="Image produit">
+                                            
+                                            {% if image.primary %}
+                                                <span class="position-absolute top-0 start-0 badge bg-success m-2">
+                                                    <i class="bi bi-star-fill me-1"></i>Principale
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="card-body p-2">
+                                            <div class="d-grid gap-2">
+                                                {% if not image.primary %}
+                                                    <form method="post" class="d-inline">
+                                                        <input type="hidden" name="action" value="set_primary">
+                                                        <input type="hidden" name="image_id" value="{{ image.id }}">
+                                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                                            <i class="bi bi-star me-1"></i>Définir comme principale
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                                
+                                                <form method="post" class="d-inline" 
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?')">
+                                                    <input type="hidden" name="action" value="delete">
+                                                    <input type="hidden" name="image_id" value="{{ image.id }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm w-100">
+                                                        <i class="bi bi-trash me-1"></i>Supprimer
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-images" style="font-size: 3rem;" class="text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucune image</h5>
+                            <p class="text-muted">Commencez par ajouter des images à ce produit.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <a href="/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CProductCrudController" 
+                   class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour aux produits
+                </a>
+                <a href="/admin?crudAction=edit&crudControllerFqcn=App%5CController%5CAdmin%5CProductCrudController&entityId={{ product.id }}" 
+                   class="btn btn-primary">
+                    <i class="bi bi-pencil me-2"></i>Modifier le produit
+                </a>
+                <a href="{{ path('product_show', {id: product.id}) }}" 
+                   class="btn btn-info" target="_blank">
+                    <i class="bi bi-box-arrow-up-right me-2"></i>Voir sur le site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+.border-success {
+    border-width: 2px !important;
+}
+</style>
+{% endblock %}

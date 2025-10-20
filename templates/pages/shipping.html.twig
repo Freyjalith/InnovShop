@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livraison - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Livraison</h1>
+        <p class="lead text-muted">Toutes les informations sur nos modes de livraison</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-truck me-2"></i>Délais de livraison</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>France métropolitaine :</strong> 2-3 jours ouvrés</li>
+                        <li><strong>DOM-TOM :</strong> 5-7 jours ouvrés</li>
+                        <li><strong>Europe :</strong> 4-6 jours ouvrés</li>
+                        <li><strong>International :</strong> 7-14 jours ouvrés</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-credit-card me-2"></i>Frais de livraison</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Livraison gratuite</strong> dès 50€ d'achat en France</li>
+                        <li><strong>Livraison standard :</strong> 4,90€</li>
+                        <li><strong>Livraison express :</strong> 9,90€ (24h)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-box-seam me-2"></i>Suivi de commande</h5>
+                    <p>Dès l'expédition de votre commande, vous recevrez un email avec le numéro de suivi. Vous pourrez également suivre votre commande depuis votre espace client.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

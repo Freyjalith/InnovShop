@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement terminé - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% if status == 'captured' %}
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle-fill text-success display-1 mb-3"></i>
+                        <h3 class="text-success">Paiement réussi !</h3>
+                        <p class="text-muted">Votre commande a été confirmée.</p>
+                        <p><strong>Numéro de commande :</strong> {{ payment.number }}</p>
+                        <p><strong>Montant :</strong> {{ (payment.totalAmount / 100)|number_format(2, ',', ' ') }} €</p>
+                        <a href="{{ path('home') }}" class="btn btn-primary mt-3">
+                            <i class="bi bi-house me-1"></i>Retour à l'accueil
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card border-danger">
+                    <div class="card-body text-center">
+                        <i class="bi bi-x-circle-fill text-danger display-1 mb-3"></i>
+                        <h3 class="text-danger">Paiement échoué</h3>
+                        <p class="text-muted">Une erreur s'est produite lors du paiement.</p>
+                        <p><strong>Statut :</strong> {{ status }}</p>
+                        <a href="{{ path('payment_choose') }}" class="btn btn-warning mt-3">
+                            <i class="bi bi-arrow-left me-1"></i>Réessayer
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-circle fs-2 text-primary me-3"></i>
+                    <h1 class="mb-0">Mon Profil</h1>
+                </div>
+                <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">
+                    <i class="bi bi-pencil me-2"></i>Modifier
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-person me-2"></i>Informations personnelles</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Prénom</label>
+                                <p class="mb-0">{{ app.user.firstName }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Nom</label>
+                                <p class="mb-0">{{ app.user.lastName }}</p>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label text-muted">Email</label>
+                                <p class="mb-0">{{ app.user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Statistiques</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Membre depuis</label>
+                                <p class="mb-0">{{ "now"|date('F Y') }}</p>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label text-muted">Statut</label>
+                                <span class="badge bg-success">Client actif</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Actions rapides</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <a href="{{ path('app_orders') }}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-bag me-2"></i>Mes commandes
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <a href="{{ path('app_profile_edit') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-pencil me-2"></i>Modifier profil
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <a href="{{ path('app_profile_addresses') }}" class="btn btn-outline-success w-100">
+                                        <i class="bi bi-geo-alt me-2"></i>Mes adresses
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <a href="{{ path('app_cart') }}" class="btn btn-outline-info w-100">
+                                        <i class="bi bi-cart me-2"></i>Mon panier
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

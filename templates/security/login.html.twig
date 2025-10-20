@@ -1,0 +1,54 @@
+{% extends 'auth_base.html.twig' %}
+
+{% block title %}Connexion - InnovShop{% endblock %}
+
+{% block body %}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="auth-icon">
+            <i class="bi bi-person-fill text-white fs-3"></i>
+        </div>
+        <h1 class="auth-title">Bon retour !</h1>
+        <p class="auth-subtitle">Connectez-vous pour découvrir nos dernières innovations</p>
+    </div>
+
+    <div class="auth-body">
+        {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endif %}
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="inputEmail" class="form-label">Email</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="votre@email.com">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="inputPassword" class="form-label">Mot de passe</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-primary w-100 mb-3" type="submit">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Accéder à mon compte
+            </button>
+        </form>
+
+        <div class="text-center">
+            <p class="mb-0 text-muted">Pas encore de compte ?</p>
+            <a href="{{ path('app_register') }}" class="text-decoration-none fw-medium">Créer un compte</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

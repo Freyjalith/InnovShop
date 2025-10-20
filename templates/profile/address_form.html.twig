@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% if address is defined %}Modifier{% else %}Ajouter{% endif %} une adresse - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-geo-alt fs-2 text-primary me-3"></i>
+                <h1 class="mb-0">{% if address is defined %}Modifier{% else %}Ajouter{% endif %} une adresse</h1>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="title" class="form-label">Nom de l'adresse *</label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="{% if address is defined %}{{ address.title }}{% endif %}" 
+                                       placeholder="Ex: Domicile, Bureau..." required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="isDefault" name="isDefault" value="1"
+                                           {% if address is defined and address.isDefault %}checked{% endif %}>
+                                    <label class="form-check-label" for="isDefault">
+                                        Adresse par défaut
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Prénom *</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" 
+                                       value="{% if address is defined %}{{ address.firstName }}{% else %}{{ app.user.firstName }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Nom *</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" 
+                                       value="{% if address is defined %}{{ address.lastName }}{% else %}{{ app.user.lastName }}{% endif %}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="street" class="form-label">Adresse *</label>
+                            <input type="text" class="form-control" id="street" name="street" 
+                                   value="{% if address is defined %}{{ address.street }}{% endif %}" 
+                                   placeholder="Numéro et nom de rue" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="postalCode" class="form-label">Code postal *</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" 
+                                       value="{% if address is defined %}{{ address.postalCode }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label for="city" class="form-label">Ville *</label>
+                                <input type="text" class="form-control" id="city" name="city" 
+                                       value="{% if address is defined %}{{ address.city }}{% endif %}" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="country" class="form-label">Pays *</label>
+                                <select class="form-select" id="country" name="country" required>
+                                    <option value="">Sélectionner un pays</option>
+                                    <option value="France" {% if address is defined and address.country == 'France' %}selected{% endif %}>France</option>
+                                    <option value="Belgique" {% if address is defined and address.country == 'Belgique' %}selected{% endif %}>Belgique</option>
+                                    <option value="Suisse" {% if address is defined and address.country == 'Suisse' %}selected{% endif %}>Suisse</option>
+                                    <option value="Luxembourg" {% if address is defined and address.country == 'Luxembourg' %}selected{% endif %}>Luxembourg</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="{% if address is defined %}{{ address.phone }}{% endif %}" 
+                                       placeholder="Ex: 01 23 45 67 89">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_profile_addresses') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check me-2"></i>{% if address is defined %}Modifier{% else %}Ajouter{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

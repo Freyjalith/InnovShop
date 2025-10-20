@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande {{ order.orderNumber }} - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-receipt fs-2 text-primary me-3"></i>
+                    <div>
+                        <h1 class="mb-0">Commande {{ order.orderNumber }}</h1>
+                        <small class="text-muted">Passée le {{ order.createdAt|date('d/m/Y à H:i') }}</small>
+                    </div>
+                </div>
+                <a href="{{ path('app_orders') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-bag me-2"></i>Articles commandés</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for item in order.items %}
+                                <div class="row align-items-center py-3 {% if not loop.last %}border-bottom{% endif %}">
+                                    <div class="col-md-5">
+                                        <h6 class="mb-1">{{ item.product.name }}</h6>
+                                        <small class="text-muted">Prix unitaire : {{ item.unitPrice|number_format(2, ',', ' ') }} €</small>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <span class="badge bg-primary">{{ item.quantity }}</span>
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        <strong>{{ item.totalPrice|number_format(2, ',', ' ') }} €</strong>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        {% if order.status == 'delivered' %}
+                                            {% set hasReview = false %}
+                                            {% for review in item.product.reviews %}
+                                                {% if review.user == app.user and review.order == order %}
+                                                    {% set hasReview = true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <a href="{{ path('app_review_create', {productId: item.product.id, orderId: order.id}) }}" 
+                                               class="btn btn-outline-warning btn-sm">
+                                                <i class="bi bi-star{{ hasReview ? '-fill' : '' }} me-1"></i>{{ hasReview ? 'Modifier' : 'Avis' }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row mt-3 pt-3 border-top">
+                                <div class="col-md-8">
+                                    <strong>Total de la commande</strong>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <strong class="fs-4 text-primary">{{ order.totalAmount|number_format(2, ',', ' ') }} €</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Statut de la commande</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            {% set statusClass = 'secondary' %}
+                            {% set statusIcon = 'clock' %}
+                            {% set statusText = 'En attente' %}
+                            {% set statusDescription = 'Votre commande est en attente de traitement.' %}
+                            
+                            {% if order.status == 'confirmed' %}
+                                {% set statusClass = 'info' %}
+                                {% set statusIcon = 'check-circle' %}
+                                {% set statusText = 'Confirmée' %}
+                                {% set statusDescription = 'Votre commande a été confirmée et va être préparée.' %}
+                            {% elseif order.status == 'processing' %}
+                                {% set statusClass = 'warning' %}
+                                {% set statusIcon = 'gear' %}
+                                {% set statusText = 'En préparation' %}
+                                {% set statusDescription = 'Votre commande est en cours de préparation.' %}
+                            {% elseif order.status == 'shipped' %}
+                                {% set statusClass = 'primary' %}
+                                {% set statusIcon = 'truck' %}
+                                {% set statusText = 'Expédiée' %}
+                                {% set statusDescription = 'Votre commande a été expédiée.' %}
+                            {% elseif order.status == 'delivered' %}
+                                {% set statusClass = 'success' %}
+                                {% set statusIcon = 'check-all' %}
+                                {% set statusText = 'Livrée' %}
+                                {% set statusDescription = 'Votre commande a été livrée avec succès.' %}
+                            {% elseif order.status == 'cancelled' %}
+                                {% set statusClass = 'danger' %}
+                                {% set statusIcon = 'x-circle' %}
+                                {% set statusText = 'Annulée' %}
+                                {% set statusDescription = 'Cette commande a été annulée.' %}
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <i class="bi bi-{{ statusIcon }} display-4 text-{{ statusClass }}"></i>
+                            </div>
+                            <h4 class="text-{{ statusClass }}">{{ statusText }}</h4>
+                            <p class="text-muted">{{ statusDescription }}</p>
+                            
+                            {% if order.shippedAt %}
+                                <small class="text-muted">
+                                    Expédiée le {{ order.shippedAt|date('d/m/Y à H:i') }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Adresse de livraison</h5>
+                        </div>
+                        <div class="card-body">
+                            <address class="mb-0">
+                                <strong>{{ order.customerFirstName }} {{ order.customerLastName }}</strong><br>
+                                {{ order.shippingAddress|nl2br }}
+                            </address>
+                            <hr>
+                            <small class="text-muted">
+                                <i class="bi bi-envelope me-1"></i>{{ order.customerEmail }}<br>
+                                <i class="bi bi-telephone me-1"></i>{{ order.customerPhone }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

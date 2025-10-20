@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveautés - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold" style="color: #333;">
+            <i class="bi bi-lightning-charge me-3"></i>Nouveautés
+        </h1>
+        <p class="lead text-muted">Découvrez nos derniers produits technologiques</p>
+    </div>
+
+    {% if newProducts %}
+        <div class="row g-4">
+            {% for product in newProducts %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="product-card">
+                        {% set primaryImage = product.getPrimaryImage() %}
+                        <div class="position-relative">
+                            <img src="{% if primaryImage %}{{ asset('uploads/product/' ~ primaryImage.filename) }}{% else %}https://via.placeholder.com/400x200?text={{ product.name|url_encode }}{% endif %}" 
+                                 class="product-image w-100" alt="{{ product.name }}">
+                            <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                <i class="bi bi-star-fill me-1"></i>Nouveau
+                            </span>
+                            {% if product.hasPromotion() %}
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                                    -{{ product.discountPercentage }}%
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge badge-category">{{ product.name|split(' ')|first }}</span>
+                                <small class="text-muted">{{ product.createdAt|date('d/m/Y') }}</small>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #333;">{{ product.name }}</h5>
+                            <p class="text-muted small mb-3">{{ product.description|length > 60 ? product.description|slice(0,60) ~ '...' : product.description }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if product.hasPromotion() %}
+                                        <span class="text-decoration-line-through text-muted me-2">{{ product.originalPrice }}€</span>
+                                        <span class="price h5 mb-0 text-danger">{{ product.getPromotionPrice() }}€</span>
+                                    {% else %}
+                                        <span class="price h5 mb-0" style="color: #007bff;">{{ product.price }}€</span>
+                                    {% endif %}
+                                    <div class="stars small text-warning">★★★★★</div>
+                                </div>
+                                <div>
+                                    <button onclick="viewProduct({{ product.id }})" class="btn btn-outline-dark btn-sm me-1">Voir</button>
+                                    <button onclick="addToCart({{ product.id }}, this)" class="btn btn-dark btn-sm">
+                                        <i class="bi bi-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-box-seam display-1 text-muted mb-3"></i>
+            <h3 class="text-muted">Aucune nouveauté pour le moment</h3>
+            <p class="text-muted">Revenez bientôt pour découvrir nos derniers produits !</p>
+            <a href="{{ path('catalogue') }}" class="btn btn-primary mt-3">
+                Voir le catalogue complet
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

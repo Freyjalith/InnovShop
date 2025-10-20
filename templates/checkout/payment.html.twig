@@ -1,0 +1,335 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-center">
+                    <div class="step-indicator completed">
+                        <span class="step-number"><i class="fas fa-check"></i></span>
+                        <span class="step-label">Informations</span>
+                    </div>
+                    <div class="step-connector completed"></div>
+                    <div class="step-indicator active">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Paiement</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-indicator">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Confirmation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h1>Paiement</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Récapitulatif de votre commande</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Informations de livraison :</h6>
+                    <p class="mb-2">
+                        <strong>{{ checkoutData.firstName }} {{ checkoutData.lastName }}</strong><br>
+                        {{ checkoutData.email }}<br>
+                        {{ checkoutData.phone }}<br>
+                        {{ checkoutData.address }}<br>
+                        {{ checkoutData.postalCode }} {{ checkoutData.city }}<br>
+                        {{ checkoutData.country }}
+                    </p>
+                    
+                    <hr>
+                    
+                    <h6>Articles commandés :</h6>
+                    {% for item in cart.items %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ item.product.name }} x{{ item.quantity }}</span>
+                            <span>{{ item.totalPrice }}€</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Méthode de paiement</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ path('app_checkout_payment_process') }}">
+                        <div class="mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="credit_card" checked>
+                                <label class="form-check-label" for="creditCard">
+                                    <i class="fas fa-credit-card me-2"></i>Carte bancaire
+                                    <small class="text-muted d-block">Visa, Mastercard, American Express</small>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="paypal">
+                                <label class="form-check-label" for="paypal">
+                                    <i class="fab fa-paypal me-2 text-primary"></i>PayPal
+                                    <small class="text-muted d-block">Paiement sécurisé avec votre compte PayPal</small>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="klarna" value="klarna">
+                                <label class="form-check-label" for="klarna">
+                                    <span class="me-2" style="color: #ffb3c7; font-weight: bold;">K</span>Klarna
+                                    <small class="text-muted d-block">Payez en 3 fois sans frais ou plus tard</small>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="applepay" value="apple_pay">
+                                <label class="form-check-label" for="applepay">
+                                    <i class="fab fa-apple me-2"></i>Apple Pay
+                                    <small class="text-muted d-block">Paiement rapide avec Touch ID ou Face ID</small>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="googlepay" value="google_pay">
+                                <label class="form-check-label" for="googlepay">
+                                    <i class="fab fa-google me-2 text-warning"></i>Google Pay
+                                    <small class="text-muted d-block">Paiement sécurisé avec Google</small>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="banktransfer" value="bank_transfer">
+                                <label class="form-check-label" for="banktransfer">
+                                    <i class="fas fa-university me-2 text-info"></i>Virement bancaire
+                                    <small class="text-muted d-block">Paiement par virement SEPA</small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="creditCardForm" class="payment-form">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="cardNumber" class="form-label">Numéro de carte *</label>
+                                        <input type="text" class="form-control" id="cardNumber" name="cardNumber" 
+                                               placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="expiryDate" class="form-label">Date d'expiration *</label>
+                                        <input type="text" class="form-control" id="expiryDate" name="expiryDate" 
+                                               placeholder="MM/AA" maxlength="5" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="cvv" class="form-label">CVV *</label>
+                                        <input type="text" class="form-control" id="cvv" name="cvv" 
+                                               placeholder="123" maxlength="4" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cardName" class="form-label">Nom sur la carte *</label>
+                                <input type="text" class="form-control" id="cardName" name="cardName" 
+                                       value="{{ checkoutData.firstName }} {{ checkoutData.lastName }}" required>
+                            </div>
+                        </div>
+
+                        <div id="paypalForm" class="payment-form" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fab fa-paypal me-2"></i>
+                                Vous serez redirigé vers PayPal pour finaliser votre paiement.
+                            </div>
+                        </div>
+
+                        <div id="klarnaForm" class="payment-form" style="display: none;">
+                            <div class="alert alert-info">
+                                <span class="me-2" style="color: #ffb3c7; font-weight: bold;">K</span>
+                                <strong>Klarna - Payez comme vous voulez</strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card text-center h-100">
+                                        <div class="card-body">
+                                            <h6>Payez maintenant</h6>
+                                            <p class="small text-muted">Paiement immédiat par carte</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card text-center h-100 border-primary">
+                                        <div class="card-body">
+                                            <h6 class="text-primary">Payez en 3 fois</h6>
+                                            <p class="small text-muted">{{ (cart.totalPrice / 3)|round(2) }}€ x 3</p>
+                                            <span class="badge bg-success">Sans frais</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card text-center h-100">
+                                        <div class="card-body">
+                                            <h6>Payez plus tard</h6>
+                                            <p class="small text-muted">Dans 30 jours</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="applePayForm" class="payment-form" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fab fa-apple me-2"></i>
+                                Utilisez Touch ID ou Face ID pour payer rapidement et en toute sécurité.
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-dark btn-lg" style="border-radius: 8px;">
+                                    <i class="fab fa-apple me-2"></i>Pay with Apple Pay
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="googlePayForm" class="payment-form" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fab fa-google me-2"></i>
+                                Paiement rapide et sécurisé avec votre compte Google.
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-outline-dark btn-lg" style="border-radius: 8px;">
+                                    <i class="fab fa-google me-2"></i>Pay with Google Pay
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="bankTransferForm" class="payment-form" style="display: none;">
+                            <div class="alert alert-warning">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Virement bancaire SEPA</strong><br>
+                                Votre commande sera traitée après réception du paiement (1-3 jours ouvrables).
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Coordonnées bancaires :</h6>
+                                    <p class="mb-1"><strong>Bénéficiaire :</strong> InnovShop SAS</p>
+                                    <p class="mb-1"><strong>IBAN :</strong> FR76 1234 5678 9012 3456 7890 123</p>
+                                    <p class="mb-1"><strong>BIC :</strong> BNPAFRPPXXX</p>
+                                    <p class="mb-0"><strong>Référence :</strong> <code>CMD-{{ 'now'|date('YmdHis') }}</code></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-lock me-2"></i>Payer {{ cart.totalPrice }}€
+                            </button>
+                            <a href="{{ path('app_checkout') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Retour aux informations
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Total de la commande</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total</span>
+                        <span>{{ cart.totalPrice }}€</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Livraison</span>
+                        <span class="text-success">Gratuite</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong>{{ cart.totalPrice }}€</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt text-success mb-2" style="font-size: 2rem;"></i>
+                    <p class="mb-0"><small>Paiement 100% sécurisé</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+    const forms = {
+        credit_card: document.getElementById('creditCardForm'),
+        paypal: document.getElementById('paypalForm'),
+        klarna: document.getElementById('klarnaForm'),
+        apple_pay: document.getElementById('applePayForm'),
+        google_pay: document.getElementById('googlePayForm'),
+        bank_transfer: document.getElementById('bankTransferForm')
+    };
+    
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            // Masquer tous les formulaires
+            Object.values(forms).forEach(form => {
+                if (form) form.style.display = 'none';
+            });
+            
+            // Afficher le formulaire correspondant
+            if (forms[this.value]) {
+                forms[this.value].style.display = 'block';
+            }
+            
+            // Gérer les champs obligatoires
+            const creditCardInputs = forms.credit_card?.querySelectorAll('input[required]') || [];
+            creditCardInputs.forEach(input => {
+                input.required = this.value === 'credit_card';
+            });
+        });
+    });
+    
+    // Formatage du numéro de carte
+    const cardNumberInput = document.getElementById('cardNumber');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function() {
+            let value = this.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            this.value = formattedValue;
+        });
+    }
+    
+    // Formatage de la date d'expiration
+    const expiryInput = document.getElementById('expiryDate');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            this.value = value;
+        });
+    }
+    
+    // CVV numérique seulement
+    const cvvInput = document.getElementById('cvv');
+    if (cvvInput) {
+        cvvInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+});
+</script>
+{% endblock %}

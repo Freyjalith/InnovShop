@@ -1,0 +1,115 @@
+{% extends 'auth_base.html.twig' %}
+
+{% block title %}Inscription - InnovShop{% endblock %}
+
+{% block body %}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="auth-icon">
+            <i class="bi bi-person-plus-fill text-white fs-3"></i>
+        </div>
+        <h1 class="auth-title">Rejoignez-nous !</h1>
+        <p class="auth-subtitle">Créez votre compte et découvrez l'innovation</p>
+    </div>
+
+    <div class="auth-body">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <form method="post" id="registerForm">
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Nom complet</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" name="fullName" id="fullName" class="form-control" required autofocus placeholder="Prénom Nom">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" id="email" class="form-control" required placeholder="votre@email.com">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="password" class="form-control" required placeholder="••••••••" minlength="6">
+                </div>
+                <div class="form-text">Minimum 6 caractères</div>
+            </div>
+
+            <div class="mb-4">
+                <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" id="confirmPassword" class="form-control" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" type="submit">
+                <i class="bi bi-person-plus me-2"></i>Créer mon compte
+            </button>
+        </form>
+
+        <div class="text-center">
+            <p class="mb-0 text-muted">Déjà un compte ?</p>
+            <a href="{{ path('app_login') }}" class="text-decoration-none fw-medium">Se connecter</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    // Validation en temps réel
+    function validatePasswords() {
+        if (confirmPassword.value && password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Les mots de passe ne correspondent pas');
+            confirmPassword.classList.add('is-invalid');
+        } else {
+            confirmPassword.setCustomValidity('');
+            confirmPassword.classList.remove('is-invalid');
+            if (confirmPassword.value) {
+                confirmPassword.classList.add('is-valid');
+            }
+        }
+    }
+    
+    confirmPassword.addEventListener('input', validatePasswords);
+    password.addEventListener('input', validatePasswords);
+    
+    // Animation du bouton lors de la soumission
+    form.addEventListener('submit', function(e) {
+        if (password.value !== confirmPassword.value) {
+            e.preventDefault();
+            confirmPassword.focus();
+            return false;
+        }
+        
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Création en cours...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

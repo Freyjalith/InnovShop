@@ -1,0 +1,26 @@
+payum:
+    security:
+        token_storage:
+            App\Entity\PaymentToken: { doctrine: orm }
+
+    storages:
+        App\Entity\Payment: { doctrine: orm }
+
+    gateways:
+        stripe_checkout:
+            factory: stripe_checkout
+            publishable_key: '%env(STRIPE_PUBLISHABLE_KEY)%'
+            secret_key: '%env(STRIPE_SECRET_KEY)%'
+            
+        paypal_express:
+            factory: paypal_express_checkout
+            username: '%env(PAYPAL_USERNAME)%'
+            password: '%env(PAYPAL_PASSWORD)%'
+            signature: '%env(PAYPAL_SIGNATURE)%'
+            sandbox: true
+            
+        # klarna_checkout:
+        #     factory: klarna_checkout
+        #     secret: '%env(KLARNA_SECRET)%'
+        #     merchant_id: '%env(KLARNA_MERCHANT_ID)%'
+        #     sandbox: true

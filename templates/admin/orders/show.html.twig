@@ -1,0 +1,165 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Commande {{ order.orderNumber }} - Admin{% endblock %}
+
+{% block admin_content %}
+<div class="container-fluid my-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('admin') }}" class="text-decoration-none">
+                    <i class="fas fa-home me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('admin_orders') }}" class="text-decoration-none">
+                    <i class="fas fa-shopping-cart me-1"></i>Commandes
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-file-invoice me-1"></i>{{ order.orderNumber }}
+            </li>
+        </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1><i class="fas fa-file-invoice me-2"></i>Commande {{ order.orderNumber }}</h1>
+            <p class="text-muted mb-0">Créée le {{ order.createdAt|date('d/m/Y à H:i') }}</p>
+        </div>
+        <div>
+            <a href="{{ path('admin_orders') }}" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left me-1"></i>Retour à la liste
+            </a>
+            <a href="{{ path('admin') }}" class="btn btn-outline-primary">
+                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Informations de la commande -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Détails de la commande</h5>
+                    {% set statusClass = {
+                        'pending': 'warning',
+                        'pending_payment': 'info',
+                        'paid': 'success',
+                        'processing': 'primary',
+                        'shipped': 'info',
+                        'delivered': 'success',
+                        'cancelled': 'danger'
+                    } %}
+                    {% set statusText = {
+                        'pending': 'En attente',
+                        'pending_payment': 'Paiement en attente',
+                        'paid': 'Payé',
+                        'processing': 'En traitement',
+                        'shipped': 'Expédié',
+                        'delivered': 'Livré',
+                        'cancelled': 'Annulé'
+                    } %}
+                    <span class="badge bg-{{ statusClass[order.status] ?? 'secondary' }} fs-6">
+                        {{ statusText[order.status] ?? order.status }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Quantité</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ item.product.name }}</strong>
+                                        </td>
+                                        <td>{{ item.unitPrice }}€</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td><strong>{{ (item.unitPrice * item.quantity)|round(2) }}€</strong></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-active">
+                                    <th colspan="3">Total de la commande</th>
+                                    <th>{{ order.totalAmount }}€</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations client -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Informations client</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Informations personnelles</h6>
+                            <p class="mb-1"><strong>{{ order.customerFirstName }} {{ order.customerLastName }}</strong></p>
+                            <p class="mb-1">{{ order.customerEmail }}</p>
+                            <p class="mb-0">{{ order.customerPhone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Adresse de livraison</h6>
+                            <p class="mb-0">{{ order.shippingAddress|nl2br }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ path('admin_order_update_status', {id: order.id}) }}">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Changer le statut</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="pending" {{ order.status == 'pending' ? 'selected' : '' }}>En attente</option>
+                                <option value="pending_payment" {{ order.status == 'pending_payment' ? 'selected' : '' }}>Paiement en attente</option>
+                                <option value="paid" {{ order.status == 'paid' ? 'selected' : '' }}>Payé</option>
+                                <option value="processing" {{ order.status == 'processing' ? 'selected' : '' }}>En traitement</option>
+                                <option value="shipped" {{ order.status == 'shipped' ? 'selected' : '' }}>Expédié</option>
+                                <option value="delivered" {{ order.status == 'delivered' ? 'selected' : '' }}>Livré</option>
+                                <option value="cancelled" {{ order.status == 'cancelled' ? 'selected' : '' }}>Annulé</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-save me-1"></i>Mettre à jour
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>N° Commande:</strong><br>{{ order.orderNumber }}</p>
+                    <p class="mb-2"><strong>Date:</strong><br>{{ order.createdAt|date('d/m/Y H:i') }}</p>
+                    <p class="mb-0"><strong>Montant total:</strong><br><span class="h5 text-success">{{ order.totalAmount }}€</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

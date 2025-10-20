@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de Confidentialité - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Politique de Confidentialité</h1>
+        <p class="text-muted">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Collecte des données</h5>
+                    <p>Nous collectons les informations que vous nous fournissez directement, notamment :</p>
+                    <ul>
+                        <li>Informations de compte (nom, email, mot de passe)</li>
+                        <li>Informations de commande (adresse de livraison, téléphone)</li>
+                        <li>Historique des achats</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Utilisation des données</h5>
+                    <p>Nous utilisons vos données pour :</p>
+                    <ul>
+                        <li>Traiter vos commandes</li>
+                        <li>Vous contacter concernant votre compte</li>
+                        <li>Améliorer nos services</li>
+                        <li>Vous envoyer des informations marketing (avec votre consentement)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Partage des données</h5>
+                    <p>Nous ne vendons, n'échangeons et ne transférons pas vos informations personnelles à des tiers, sauf :</p>
+                    <ul>
+                        <li>Avec votre consentement explicite</li>
+                        <li>Pour traiter vos commandes (transporteurs, prestataires de paiement)</li>
+                        <li>Si requis par la loi</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Vos droits</h5>
+                    <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                    <ul>
+                        <li>Droit d'accès à vos données</li>
+                        <li>Droit de rectification</li>
+                        <li>Droit à l'effacement</li>
+                        <li>Droit à la portabilité</li>
+                        <li>Droit d'opposition</li>
+                    </ul>
+                    <p>Pour exercer ces droits, contactez-nous à : privacy@innovshop.fr</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Sécurité</h5>
+                    <p>Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre l'accès non autorisé, l'altération, la divulgation ou la destruction.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

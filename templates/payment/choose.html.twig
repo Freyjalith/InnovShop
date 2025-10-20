@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choisir le mode de paiement - InnovShop{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-credit-card me-2"></i>Choisir votre mode de paiement
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Stripe -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-primary">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-credit-card-2-front display-4 text-primary mb-3"></i>
+                                    <h5>Carte bancaire</h5>
+                                    <p class="text-muted">Paiement sécurisé par Stripe</p>
+                                    <ul class="list-unstyled small mb-3">
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Visa, Mastercard</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Apple Pay, Google Pay</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Paiement instantané</li>
+                                    </ul>
+                                    <a href="{{ path('payment_prepare', {gateway: 'stripe_checkout'}) }}" 
+                                       class="btn btn-primary">
+                                        <i class="bi bi-credit-card me-1"></i>Payer par carte
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PayPal -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-warning">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-paypal display-4 text-warning mb-3"></i>
+                                    <h5>PayPal</h5>
+                                    <p class="text-muted">Paiement via votre compte PayPal</p>
+                                    <ul class="list-unstyled small mb-3">
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Compte PayPal</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Protection acheteur</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Paiement sécurisé</li>
+                                    </ul>
+                                    <a href="{{ path('payment_prepare', {gateway: 'paypal_express'}) }}" 
+                                       class="btn btn-warning">
+                                        <i class="bi bi-paypal me-1"></i>Payer avec PayPal
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Klarna -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-info">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-credit-card display-4 text-info mb-3"></i>
+                                    <h5>Klarna</h5>
+                                    <p class="text-muted">Payez plus tard avec Klarna</p>
+                                    <ul class="list-unstyled small mb-3">
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Payez en 3 fois</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>Payez plus tard</li>
+                                        <li><i class="bi bi-check-circle text-success me-1"></i>0% d'intérêt</li>
+                                    </ul>
+                                    <a href="{{ path('payment_prepare', {gateway: 'klarna_checkout'}) }}" 
+                                       class="btn btn-info">
+                                        <i class="bi bi-credit-card me-1"></i>Payer avec Klarna
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="bi bi-shield-check me-2"></i>
+                                <strong>Paiement 100% sécurisé</strong> - Vos données bancaires sont protégées par un cryptage SSL.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
